@@ -70,6 +70,7 @@ const (
 	ApiTextGeneration  = "text_generation"
 	ApiImageGeneration = "image_generation"
 	ApiMCP             = "mcp"
+	ApiEmbedding       = "embedding"
 )
 
 // provider types
@@ -148,6 +149,7 @@ type AISecurityConfig struct {
 	ResponseImageCheckService     string
 	ResponseContentJsonPath       string
 	ResponseStreamContentJsonPath string
+	ResponseErrorContentJsonPath  string
 	DenyCode                      int64
 	DenyMessage                   string
 	ProtocolOriginal              bool
@@ -163,7 +165,7 @@ type AISecurityConfig struct {
 	ConsumerRequestCheckService   []map[string]interface{}
 	ConsumerResponseCheckService  []map[string]interface{}
 	ConsumerRiskLevel             []map[string]interface{}
-	// text_generation, image_generation, etc.
+	// text_generation, image_generation, embedding, etc.
 	ApiType string
 	// openai, qwen, comfyui, etc.
 	ProviderType string
@@ -223,6 +225,9 @@ func (config *AISecurityConfig) Parse(json gjson.Result) error {
 	}
 	if obj := json.Get("responseStreamContentJsonPath"); obj.Exists() {
 		config.ResponseStreamContentJsonPath = obj.String()
+	}
+	if obj := json.Get("responseErrorContentJsonPath"); obj.Exists() {
+		config.ResponseErrorContentJsonPath = obj.String()
 	}
 	if obj := json.Get("contentModerationLevelBar"); obj.Exists() {
 		config.ContentModerationLevelBar = obj.String()
